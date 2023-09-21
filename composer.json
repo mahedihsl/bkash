@@ -13,5 +13,8 @@
 			"name": "Mahedi hassan"
 		}
 	],
-	"require": {}
+	"require": {
+		"phpspec/prophecy": "^1.12.1",
+		"phpunit/phpunit": "^10.0"
+	}
 }
