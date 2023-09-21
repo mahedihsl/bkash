@@ -1,17 +1,17 @@
 {
-    "name": "mahedi250/bkash",
-    "description": "bkash payment gateway for Laravel",
-    "type": "library",
-    "license": "MIT",
-    "autoload": {
-        "psr-4": {
-            "Mahedi250\\Bkash\\": "src/"
-        }
-    },
-    "authors": [
-        {
-            "name": "Mahedi hassan"
-        }
-    ],
-    "require": {}
+	"name": "mahedi250/bkash",
+	"description": "bkash payment gateway for Laravel",
+	"type": "library",
+	"license": "MIT",
+	"autoload": {
+		"psr-4": {
+			"Mahedi250\\Bkash\\": "src/"
+		}
+	},
+	"authors": [
+		{
+			"name": "Mahedi hassan"
+		}
+	],
+	"require": {}
 }
