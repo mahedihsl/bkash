@@ -3,7 +3,7 @@
 	"description": "Description of your package",
 	"type": "library",
 	"require": {
-		"php": ">=7.3",
+		"php": ">=7.3, <8.2.10",
 		"laravel/framework": "^7.0 || ^9.0",
 		"phpunit/phpunit": "^9.5"
 	},
