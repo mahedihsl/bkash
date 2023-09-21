@@ -1,14 +1,21 @@
 {
 	"name": "mahedi250/bkash-pgw",
-	"description": "Description of your package",
+	"description": "bkash payment gateway laravel",
 	"type": "library",
-	"require": {
-		"php": ">=7.3",
-		"laravel/framework": "^9.19"
-	},
+	"license": "MIT",
 	"autoload": {
 		"psr-4": {
-			"YourVendor\\YourPackage\\": "src/"
+			"mahedi250\\bkash\\": "src/"
 		}
+	},
+	"authors": [
+		{
+			"name": "mahedi250"
+		}
+	],
+	"minimum-stability": "dev",
+	"require": {
+		"php": "^7.4|^8.0|^8.1",
+		"illuminate/support": "~6|~7|~8|~9"
 	}
 }
