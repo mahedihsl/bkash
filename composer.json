@@ -28,7 +28,7 @@
 	"extra": {
 		"laravel": {
 			"providers": [
-				"Mahedi250\\bkash\\bkashServiceProvider"
+				"Mahedi250\\Bkash\\bkashServiceProvider"
 			]
 		}
 	}
