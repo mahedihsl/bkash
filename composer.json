@@ -13,8 +13,11 @@
 			"name": "Mahedi hassan"
 		}
 	],
+	"minimum-stability": "dev",
 	"require": {
 		"phpspec/prophecy": "^1.12.1",
-		"phpunit/phpunit": "^10.0"
+		"phpunit/phpunit": "^10.0",
+		"php": "^7.4|^8.0|^8.1.*|^8.2.*",
+		"illuminate/support": "~6|~7|~8|~9"
 	}
 }
