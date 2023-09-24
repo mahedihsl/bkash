@@ -23,7 +23,7 @@
 	"minimum-stability": "dev",
 	"require": {
 		"php": "^7.4|^8.0|^8.1",
-		"laravel/framework": "^9.19"
+		"laravel/framework": "^7.*|^8.*|^9.19"
 	},
 	"extra": {
 		"laravel": {
