@@ -23,12 +23,12 @@
 	"minimum-stability": "dev",
 	"require": {
 		"php": "^7.4|^8.0|^8.1",
-		"illuminate/support": "~6|~7|~8|~9"
+		"laravel/framework": "^7.0|^8.0|^9.0"
 	},
 	"extra": {
 		"laravel": {
 			"providers": [
-				"Codeboxr\\bkash\\bkashServiceProvider"
+				"Mahedi250\\bkash\\bkashServiceProvider"
 			]
 		}
 	}
