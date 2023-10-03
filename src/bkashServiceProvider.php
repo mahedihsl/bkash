@@ -34,7 +34,7 @@ class bkashServiceProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__.'/routes/bkashRoutes.php');
 
           $this->publishes([
-            __DIR__ ."/config/nagad.php" => config_path("bkash.php")
+            __DIR__ ."/config/bkash.php" => config_path("bkash.php")
         ]);
         // //
     }
