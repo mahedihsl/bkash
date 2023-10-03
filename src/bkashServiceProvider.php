@@ -3,6 +3,7 @@
 namespace Mahedi250\Bkash;
 
 use Illuminate\Support\ServiceProvider;
+use Mahedi250\Bkash\Payment\Payment;
 
 class bkashServiceProvider extends ServiceProvider
 {
@@ -13,7 +14,13 @@ class bkashServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->mergeConfigFrom(__DIR__ . "/config/bkash.php", "bkash");
+
+        $this->app->bind("payment", function () {
+            return new Payment();
+        });
+
+
     }
 
     /**
@@ -23,7 +30,12 @@ class bkashServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
         $this->loadRoutesFrom(__DIR__.'/routes/bkashRoutes.php');
-        //
+
+          $this->publishes([
+            __DIR__ ."/config/nagad.php" => config_path("bkash.php")
+        ]);
+        // //
     }
 }
