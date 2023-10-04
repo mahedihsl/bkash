@@ -4,7 +4,7 @@ namespace Mahedi250\Bkash;
 
 use Illuminate\Support\ServiceProvider;
 use Mahedi250\Bkash\Payment\Payment;
-
+use Mahedi250\Bkash\Payment\CheckoutUrl;
 class bkashServiceProvider extends ServiceProvider
 {
     /**
@@ -18,6 +18,9 @@ class bkashServiceProvider extends ServiceProvider
 
         $this->app->bind("payment", function () {
             return new Payment();
+        });
+        $this->app->bind("CheckoutUrl", function () {
+            return new CheckoutUrl();
         });
 
 

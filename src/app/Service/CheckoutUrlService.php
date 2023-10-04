@@ -10,9 +10,11 @@ use Illuminate\Support\Str;
 
 class CheckoutUrlService extends BkashService
 {
+  private $credential;
   public function __construct()
   {
     parent::__construct('tokenized');
+    $this->credential = new BkashCredential(config('bkash.tokenized.sandbox2'));
   }
 
   private function storeLog($apiName, $url, $headers, $body, $response)
@@ -27,16 +29,16 @@ class CheckoutUrlService extends BkashService
     Redis::command('SET', [$key, json_encode($log)]);
   }
 
-  public function grantToken(BkashCredential $credential)
+  public function grantToken()
   {
     try {
-      $url = $credential->getURL('/checkout/token/grant');
-      $headers = $credential->getAuthHeaders();
+      $url = $this->credential->getURL('/checkout/token/grant');
+      $headers = $this->credential->getAuthHeaders();
 
 
       $body = [
-        'app_key' => $credential->appKey,
-        'app_secret' => $credential->appSecret,
+        'app_key' => $this->credential->appKey,
+        'app_secret' => $this->credential->appSecret,
       ];
       $res = $this->httpClient()->post($url, [
         'json' => $body,
@@ -53,16 +55,16 @@ class CheckoutUrlService extends BkashService
     }
   }
 
-  public function refreshToken($refreshToken, BkashCredential $credential)
+  public function refreshToken($refreshToken)
   {
     try {
-      $res = $this->httpClient()->post($credential->getURL('/checkout/token/refresh'), [
+      $res = $this->httpClient()->post($this->credential->getURL('/checkout/token/refresh'), [
         'json' => [
-          'app_key' => $credential->appKey,
-          'app_secret' => $credential->appSecret,
+          'app_key' => $this->credential->appKey,
+          'app_secret' => $this->credential->appSecret,
           'refresh_token' => $refreshToken,
         ],
-        'headers' => $credential->getAuthHeaders(),
+        'headers' => $this->credential->getAuthHeaders(),
       ]);
 
       return json_decode($res->getBody()->getContents(), true);
@@ -71,18 +73,18 @@ class CheckoutUrlService extends BkashService
     }
   }
 
-  public function createPayment($amount,$invoiceNumber= null,BkashCredential $credential)
+  public function createPayment($amount,$invoiceNumber= nul)
   {
     try {
-      $token= $this->grantToken($credential);
-      $url = $credential->getURL('/checkout/create');
-      $headers = $credential->getAccessHeaders($token['id_token']);
+      $token= $this->grantToken($this->credential);
+      $url = $this->credential->getURL('/checkout/create');
+      $headers = $this->credential->getAccessHeaders($token['id_token']);
 
       $body = [
         "mode"=> "0011",
         'payerReference' => ' ',
         'currency' => 'BDT',
-        'callbackURL' => $credential->getCallBackURL(),
+        'callbackURL' => $this->credential->getCallBackURL(),
         'amount' => strval($amount * 1.0),
         'intent' => 'sale',
         'merchantInvoiceNumber' => $invoiceNumber? $invoiceNumber : str::random(20),
@@ -106,12 +108,12 @@ class CheckoutUrlService extends BkashService
     }
   }
 
-  public function executePayment($paymentID, BkashCredential $credential)
+  public function executePayment($paymentID)
   {
     try {
-        $token= $this->grantToken($credential);
-      $url = $credential->getURL('/checkout/execute/');
-      $headers = $credential->getAccessHeaders($token['id_token']);
+        $token= $this->grantToken($this->credential);
+      $url = $this->credential->getURL('/checkout/execute/');
+      $headers = $this->credential->getAccessHeaders($token['id_token']);
       $body = [
         'paymentID'=> $paymentID
       ];
@@ -131,19 +133,17 @@ class CheckoutUrlService extends BkashService
     }
   }
 
-  /**
-   * trxID: 9G5507A7EH
-   * paymentID: 8YQNJVY1657017309523
-   * refundTrxID: 9G5307A7KT
-   */
 
-  public function queryPayment($paymentID, BkashCredential $credential)
+
+  public function queryPayment($paymentID)
   {
     try {
-      $url = $credential->getURL('/checkout/payment/query/') . $paymentID;
-      $headers = $credential->getAccessHeaders($this->getAccessToken());
-      $body = [];
-      $res = $this->httpClient()->get($url, [
+      $token= $this->grantToken($this->credential);
+      $url = $this->credential->getURL('/checkout/payment/status');
+      $headers = $this->credential->getAccessHeaders($token['id_token']);
+      $body = ['paymentID'=>$paymentID];
+      $res = $this->httpClient()->post($url, [
+        'json'=> $body,
         'headers' => $headers,
       ]);
 
@@ -157,13 +157,15 @@ class CheckoutUrlService extends BkashService
     }
   }
 
-  public function searchTransaction($trxID, BkashCredential $credential)
+  public function searchTransaction($trxID)
   {
     try {
-      $url = $credential->getURL('/checkout/payment/search/') . $trxID;
-      $headers = $credential->getAccessHeaders($this->getAccessToken());
-      $body = [];
-      $res = $this->httpClient()->get($url, [
+        $token= $this->grantToken($this->credential);
+      $url = $this->credential->getURL('/checkout/general/searchTransaction');
+      $headers = $this->credential->getAccessHeaders($token['id_token']);
+      $body = ['trxID'=>$trxID];
+      $res = $this->httpClient()->post($url, [
+        'json'=> $body,
         'headers' => $headers,
       ]);
 
@@ -176,10 +178,11 @@ class CheckoutUrlService extends BkashService
     }
   }
 
-  public function refundTransaction($paymentID, $trxID, $amount, BkashCredential $credential)
+  public function refundTransaction($paymentID, $trxID, $amount)
   {
     try {
-      $res = $this->httpClient()->post($credential->getURL('/checkout/payment/refund/'), [
+        $token= $this->grantToken($this->credential);
+      $res = $this->httpClient()->post($this->credential->getURL('/checkout/payment/refund'), [
         'json' => [
           'paymentID' => $paymentID,
           'trxID' => $trxID,
@@ -187,7 +190,7 @@ class CheckoutUrlService extends BkashService
           'sku' => 'no SKU',
           'reason' => 'Product quality issue'
         ],
-        'headers' => $credential->getAccessHeaders($this->getAccessToken()),
+        'headers' => $this->credential->getAccessHeaders($token['id_token']),
       ]);
 
       return json_decode($res->getBody()->getContents(), true);
