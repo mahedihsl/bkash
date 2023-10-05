@@ -1,8 +1,9 @@
 <?php
 
-namespace Mahedi250\Bkash\Payment;
+namespace Mahedi250\Bkash\Products;
 
 use Mahedi250\Bkash\app\Service\CheckoutUrlService;
+
 
 
 
@@ -17,10 +18,10 @@ class CheckoutUrl
     }
 
 
-    public function Create($amount,$invoiceNumber=null)
+    public function Create($amount,$options=[])
     {
 
-        return $this->checkoutUrl->createPayment($amount,$invoiceNumber);
+        return $this->checkoutUrl->createPayment($amount,$options);
 
     }
     public function Execute($paymentID)
@@ -45,6 +46,18 @@ class CheckoutUrl
     {
 
         return $this->checkoutUrl->refundTransaction($paymentID, $trxID, $amount);
+
+    }
+    public function Capture($paymentID)
+    {
+
+        return $this->checkoutUrl->capturePayment($paymentID);
+
+    }
+    public function Void($paymentID)
+    {
+
+        return $this->checkoutUrl->voidPayment($paymentID);
 
     }
 

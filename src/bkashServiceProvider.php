@@ -3,8 +3,8 @@
 namespace Mahedi250\Bkash;
 
 use Illuminate\Support\ServiceProvider;
-use Mahedi250\Bkash\Payment\Payment;
-use Mahedi250\Bkash\Payment\CheckoutUrl;
+use Mahedi250\Bkash\Products\CheckoutUrl;
+use Mahedi250\Bkash\app\Exceptions\BkashExceptionHandler;
 class bkashServiceProvider extends ServiceProvider
 {
     /**
@@ -16,12 +16,11 @@ class bkashServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . "/config/bkash.php", "bkash");
 
-        $this->app->bind("payment", function () {
-            return new Payment();
-        });
+
         $this->app->bind("CheckoutUrl", function () {
             return new CheckoutUrl();
         });
+
 
 
     }
@@ -39,6 +38,16 @@ class bkashServiceProvider extends ServiceProvider
           $this->publishes([
             __DIR__ ."/config/bkash.php" => config_path("bkash.php")
         ]);
+
+        $this->renderBkashException();
         // //
+    }
+
+    protected function renderBkashException()
+    {
+        $this->app->bind(
+            \Illuminate\Contracts\Debug\ExceptionHandler::class,
+            BkashExceptionHandler::class
+        );
     }
 }

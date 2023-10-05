@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Redis;
 use Mahedi250\Bkash\app\Service\BkashService;
 use Exception;
 use Illuminate\Support\Str;
+use Mahedi250\Bkash\app\Exceptions\BkashException;
 
 class CheckoutUrlService extends BkashService
 {
@@ -73,8 +74,20 @@ class CheckoutUrlService extends BkashService
     }
   }
 
-  public function createPayment($amount,$invoiceNumber= nul)
+  public function createPayment($amount,$options)
   {
+    $defaults = [
+        'payerReference' => ' ',
+        'intent' => 'sale',
+        'merchantInvoiceNumber' => str::random(20)
+    ];
+
+    $options = array_merge($defaults, $options);
+
+    if ($options['intent'] !== 'sale' && $options['intent'] !== 'authorization') {
+        throw new BkashException('Invalid value for "intent". Allowed values are "sale" or "authorization".');
+    }
+
     try {
       $token= $this->grantToken($this->credential);
       $url = $this->credential->getURL('/checkout/create');
@@ -82,13 +95,15 @@ class CheckoutUrlService extends BkashService
 
       $body = [
         "mode"=> "0011",
-        'payerReference' => ' ',
+        'payerReference' =>$options['payerReference'],
         'currency' => 'BDT',
         'callbackURL' => $this->credential->getCallBackURL(),
         'amount' => strval($amount * 1.0),
-        'intent' => 'sale',
-        'merchantInvoiceNumber' => $invoiceNumber? $invoiceNumber : str::random(20),
+        'intent' => $options['intent'],
+        'merchantInvoiceNumber' => $options['merchantInvoiceNumber']
       ];
+
+
       $res = $this->httpClient()->post($url, [
         'json' => $body,
         'headers' => $headers,
@@ -194,6 +209,50 @@ class CheckoutUrlService extends BkashService
       ]);
 
       return json_decode($res->getBody()->getContents(), true);
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
+
+
+  public function capturePayment($paymentID)
+  {
+    try {
+        $token= $this->grantToken($this->credential);
+      $url = $this->credential->getURL('/checkout/payment/confirm/capture');
+      $headers = $this->credential->getAccessHeaders($token['id_token']);
+      $body = [
+        'paymentID'=> $paymentID
+      ];
+      $res = $this->httpClient()->post($url, [
+        'json' => $body,
+        'headers' => $headers,
+      ]);
+
+      $response = json_decode($res->getBody()->getContents(), true);
+
+      return $response;
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
+  public function voidPayment($paymentID)
+  {
+    try {
+        $token= $this->grantToken($this->credential);
+      $url = $this->credential->getURL('/checkout/payment/confirm/void');
+      $headers = $this->credential->getAccessHeaders($token['id_token']);
+      $body = [
+        'paymentID'=> $paymentID
+      ];
+      $res = $this->httpClient()->post($url, [
+        'json' => $body,
+        'headers' => $headers,
+      ]);
+
+      $response = json_decode($res->getBody()->getContents(), true);
+
+      return $response;
     } catch (Exception $e) {
       throw $e;
     }

@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Mahedi250\Bkash\Facade\bkashPayment;
 use Mahedi250\Bkash\Facade\CheckoutUrl;
 use Illuminate\Http\Request;
 
@@ -10,7 +9,7 @@ Route::get("/bkash",function(){
 
     //return bkashPayment::Create(100);
 
-   return redirect(CheckoutUrl::Create(100)['bkashURL']);
+   return redirect(CheckoutUrl::Create(200,['intent'=>'authorization'])['bkashURL']);
 
 });
 
@@ -29,6 +28,14 @@ Route::get("bkash/callback",function(Request $request){
 Route::get("bkash/quary/{paymentID}",function($paymentID){
 
     return  CheckoutUrl::Query($paymentID);
+});
+Route::get("bkash/capture/{paymentID}",function($paymentID){
+
+    return  CheckoutUrl::Capture($paymentID);
+});
+Route::get("bkash/void/{paymentID}",function($paymentID){
+
+    return  CheckoutUrl::Void($paymentID);
 });
 Route::get("bkash/serach/{trxID}",function($trxID){
 
