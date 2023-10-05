@@ -34,7 +34,7 @@
         'password' => 'sandboxTokenizedUser12345',
         'appKey' => '7epj60ddf7id0chhcm3vkejtab',
         'appSecret' => '18mvi27h9l38dtdv110rq5g603blk0fhh5hg46gfb27cp2rbs66f',
-        'callbackUrl' => env('BKASH_CALLBACK_URL',"/bkash/callback"),
+        'callbackUrl' => env('BKASH_CALLBACK_URL',"http://127.0.0.1:8000/bkash/callback"),
       ],
       'sandbox2' => [
         'baseUrl' => 'https://tokenized.sandbox.bka.sh/v1.2.0-beta/tokenized',
@@ -42,7 +42,7 @@
         'password' => 'sandboxTokenizedUser02@12345',
         'appKey' => '4f6o0cjiki2rfm34kfdadl1eqq',
         'appSecret' => '2is7hdktrekvrbljjh44ll3d9l1dtjo4pasmjvs5vl5qr3fug4b',
-        'callbackUrl' => env('BKASH_CALLBACK_URL',"/bkash/callback"),
+        'callbackUrl' => env('BKASH_CALLBACK_URL',"http://127.0.0.1:8000/bkash/callback"),
       ],
     ],
   ];

@@ -3,7 +3,7 @@
 namespace Mahedi250\Bkash\app\Service;
 
 use Mahedi250\Bkash\app\Util\BkashCredential;
-use Illuminate\Support\Facades\Redis;
+
 use Mahedi250\Bkash\app\Service\BkashService;
 use Exception;
 use Illuminate\Support\Str;
@@ -27,7 +27,7 @@ class CheckoutUrlService extends BkashService
       'response' => $response,
     ];
     $key = 'bkash:log:' . $apiName;
-    Redis::command('SET', [$key, json_encode($log)]);
+
   }
 
   public function grantToken()
