@@ -13,12 +13,15 @@ class BkashCredential
 
   public function __construct($arr)
   {
-    $this->baseUrl = $arr['baseUrl'];
-    $this->appKey = $arr['appKey'];
-    $this->appSecret = $arr['appSecret'];
-    $this->username = $arr['username'];
-    $this->password = $arr['password'];
-    $this->callbackurl=$arr['callbackUrl'];
+
+    $baseKey = $arr['BKASH_SANDBOX'] ? 'BKASH_CHECKOUT_URL_BASE_URL_SANDBOX':'BKASH_CHECKOUT_URL_BASE_URL_PRODUCTION';
+    $this->baseUrl = $arr[$baseKey];
+    $this->appKey = $arr['BKASH_CHECKOUT_URL_APP_KEY'];
+    $this->appSecret = $arr['BKASH_CHECKOUT_URL_APP_SECRET'];
+    $this->username = $arr['BKASH_CHECKOUT_URL_USER_NAME'];
+    $this->password = $arr['BKASH_CHECKOUT_URL_PASSWORD'];
+    $this->callbackurl=$arr['callback_url'];
+
   }
 
   public function getURL($path)
