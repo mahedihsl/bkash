@@ -1,19 +1,23 @@
 # bKash Laravel Package
 
+Welcome to the bKash Laravel Package! This package allows for seamless integration with the bKash payment gateway, making transactions a breeze.
+
 ## Installation
 
-  1. Install the package using Composer:
-   ```bash
-   composer require mahedi250/bkash
-
-  2.To publish the package assets, run:
+To get started, install the package using Composer:
 
 ```bash
-php artisan vendor:publish --provider="Mahedi250\Bkash\bkashServiceProvider"
+composer require mahedi250/bkash
 
-  3.Generating a Checkout URL and Redirecting Users
+# Publishing Package Assets
 
-```php
-use Mahedi250\Bkash\Facade\CheckoutUrl;
+This package contains various assets that are essential for its functionality. Before utilizing the package's features, it's important to publish these assets to your Laravel application.
 
-return redirect(CheckoutUrl::Create(100)["bkashURL"]);
+To publish the package assets, follow these steps:
+
+1. Open a terminal and navigate to your Laravel project directory.
+
+2. Run the following command to publish the assets:
+
+   ```bash
+   php artisan vendor:publish --provider="Mahedi250\Bkash\bkashServiceProvider"
