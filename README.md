@@ -2,7 +2,7 @@
 
 ## Installation
 
-1. Install the package using Composer:
+  1. Install the package using Composer:
    ```bash
    composer require mahedi250/bkash
 
@@ -11,12 +11,9 @@
 ```bash
 php artisan vendor:publish --provider="Mahedi250\Bkash\bkashServiceProvider"
 
+  3.Generating a Checkout URL and Redirecting Users
 
-
-## Generating a Checkout URL and Redirecting Users
-
-To generate a checkout URL and redirect the user, use the following code:
-
+```php
 use Mahedi250\Bkash\Facade\CheckoutUrl;
 
 return redirect(CheckoutUrl::Create(100)["bkashURL"]);
