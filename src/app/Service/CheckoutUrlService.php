@@ -15,6 +15,7 @@ class CheckoutUrlService extends BkashService
   private $token;
   public function __construct()
   {
+
     parent::__construct('tokenized');
     $this->credential = new BkashCredential(config('bkash'));
     $this->token= $this->grantToken()['id_token'];

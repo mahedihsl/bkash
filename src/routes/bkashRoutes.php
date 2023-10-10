@@ -1,50 +1,20 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Mahedi250\Bkash\Facade\CheckoutUrl;
-use Illuminate\Http\Request;
+use Mahedi250\Bkash\app\Http\Controllers\CheckoutUrlController;
 
 
-Route::get("/bkash",function(){
-
-    //return bkashPayment::Create(100);
-
-   return redirect(CheckoutUrl::Create(200,['intent'=>'authorization'])['bkashURL']);
-
-});
-
-Route::get("bkash/callback",function(Request $request){
-    if($request->all()['status']=='success'){
-        return  CheckoutUrl::Execute($request['paymentID']);
-
-    }
-    else {
-        return $request->all()['status'];
-    }
 
 
-});
 
-Route::get("bkash/quary/{paymentID}",function($paymentID){
+Route::get("bkash/callback",[CheckoutUrlController::class,'Callback']);
+Route::get("bkash/failed",[CheckoutUrlController::class,'Failed']);
+Route::get("bkash/success",[CheckoutUrlController::class,'Success']);
 
-    return  CheckoutUrl::Query($paymentID);
-});
-Route::get("bkash/capture/{paymentID}",function($paymentID){
 
-    return  CheckoutUrl::Capture($paymentID);
-});
-Route::get("bkash/void/{paymentID}",function($paymentID){
 
-    return  CheckoutUrl::Void($paymentID);
-});
-Route::get("bkash/serach/{trxID}",function($trxID){
 
-    return  CheckoutUrl::Search($trxID);
-});
-Route::get("bkash/refund",function(){
 
-    return  CheckoutUrl::refund('TR0011ztwBNPQ1696419411358','AJ460FKP56','100');
-});
 
 
 

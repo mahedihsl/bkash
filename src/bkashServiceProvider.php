@@ -21,6 +21,8 @@ class bkashServiceProvider extends ServiceProvider
             return new CheckoutUrl();
         });
 
+        $this->loadViewsFrom(__DIR__ . '/Views', 'bkash');
+
 
 
     }
