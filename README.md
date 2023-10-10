@@ -6,7 +6,7 @@
    ```bash
    composer require mahedi250/bkash
 
-2.To publish the package assets, run:
+  2.To publish the package assets, run:
 
 ```bash
 php artisan vendor:publish --provider="Mahedi250\Bkash\bkashServiceProvider"
