@@ -11,3 +11,12 @@
 ```bash
 php artisan vendor:publish --provider="Mahedi250\Bkash\bkashServiceProvider"
 
+
+To generate a checkout URL and redirect the user, use the following code:
+
+```php
+use Mahedi250\Bkash\Facade\CheckoutUrl;
+
+return redirect(CheckoutUrl::Create(100)["bkashURL"]);
+
+
