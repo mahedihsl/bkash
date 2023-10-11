@@ -33,7 +33,7 @@ class CheckoutUrlService extends BkashService
     ];
     $key = 'bkash:log:' . $apiName;
 
-    Log::channel('bkash-pgw')->info($key."=>".json_encode($log));
+    Log::info($key."=>".json_encode($log));
 
   }
 
@@ -60,7 +60,7 @@ class CheckoutUrlService extends BkashService
 
     }
 
-      $this->storeLog('grant_token', $url, $headers, $body, $response);
+      //$this->storeLog('grant_token', $url, $headers, $body, $response);
 
       return $response;
     } catch (Exception $e) {
