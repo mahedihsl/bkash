@@ -42,6 +42,7 @@ class bkashServiceProvider extends ServiceProvider
         ]);
 
         $this->renderBkashException();
+        $this->addCustomLogChannel();
         // //
     }
 
@@ -51,5 +52,17 @@ class bkashServiceProvider extends ServiceProvider
             \Illuminate\Contracts\Debug\ExceptionHandler::class,
             BkashExceptionHandler::class
         );
+    }
+
+    private function addCustomLogChannel()
+    {
+        config([
+            'logging.channels.bkash_pgw' => [
+                'driver' => 'daily',
+                'path' => storage_path('logs/bkash/bkash_pgw.log'),
+                'level' => 'debug',
+                'days' => 30,
+            ],
+        ]);
     }
 }

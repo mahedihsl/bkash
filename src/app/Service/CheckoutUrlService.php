@@ -8,6 +8,7 @@ use Mahedi250\Bkash\app\Service\BkashService;
 use Exception;
 use Illuminate\Support\Str;
 use Mahedi250\Bkash\app\Exceptions\BkashException;
+use Illuminate\Support\Facades\Log;
 
 class CheckoutUrlService extends BkashService
 {
@@ -31,6 +32,8 @@ class CheckoutUrlService extends BkashService
       'response' => $response,
     ];
     $key = 'bkash:log:' . $apiName;
+
+    Log::channel('bkash-pgw')->info($key."=>".$log);
 
   }
 
@@ -124,7 +127,7 @@ class CheckoutUrlService extends BkashService
       $response = json_decode($res->getBody()->getContents(), true);
 
 
-      //$this->storeLog('create_payment', $url, $headers, $body, $response);
+      $this->storeLog('create_payment', $url, $headers, $body, $response);
 
       return $response;
     } catch (Exception $e) {
@@ -147,8 +150,8 @@ class CheckoutUrlService extends BkashService
       ]);
 
       $response = json_decode($res->getBody()->getContents(), true);
-      //dd($response);
 
+      $this->storeLog('Execute Payment', $url, $headers, $body, $response);
 
 
       return $response;
