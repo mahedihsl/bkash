@@ -33,7 +33,7 @@ class CheckoutUrlService extends BkashService
     ];
     $key = 'bkash:log:' . $apiName;
 
-    Log::channel('bkash-pgw')->info($key."=>".$log);
+    Log::channel('bkash-pgw')->info($key."=>".json_encode($log));
 
   }
 
