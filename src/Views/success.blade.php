@@ -45,7 +45,10 @@
         Payment Successful.
     </div>
     <div class="success-message">
-     Txrid :  {{ $txrID }}
+        @if(session('payment_confirm_message'))
+
+       TxrID :  {{ session('payment_confirm_message') }}
+@endif
     </div>
 </body>
 </html>

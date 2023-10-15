@@ -1,6 +1,6 @@
 <?php
 
-namespace Mahedi250\Bkash\app\Util;
+namespace Mahedi250\Bkash\App\Util;
 
 class BkashCredential
 {

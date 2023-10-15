@@ -45,7 +45,10 @@
         Payment Failed.
     </div>
     <div class="error-message">
-        Payment Status {{ $status }}
+        @if(session('payment_Fail_message'))
+
+            {{ session('payment_Fail_message') }}
+    @endif
     </div>
 </body>
 </html>

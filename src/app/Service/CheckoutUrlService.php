@@ -1,13 +1,12 @@
 <?php
 
-namespace Mahedi250\Bkash\app\Service;
+namespace Mahedi250\Bkash\App\Service;
 
-use Mahedi250\Bkash\app\Util\BkashCredential;
-
-use Mahedi250\Bkash\app\Service\BkashService;
+use Mahedi250\Bkash\App\Util\BkashCredential;
+use Mahedi250\Bkash\App\Service\BkashService;
 use Exception;
 use Illuminate\Support\Str;
-use Mahedi250\Bkash\app\Exceptions\BkashException;
+use Mahedi250\Bkash\App\Exceptions\BkashException;
 use Illuminate\Support\Facades\Log;
 
 class CheckoutUrlService extends BkashService
@@ -19,6 +18,7 @@ class CheckoutUrlService extends BkashService
 
     parent::__construct('tokenized');
     $this->credential = new BkashCredential(config('bkash'));
+
     $this->token= $this->grantToken()['id_token'];
 
   }
@@ -55,12 +55,13 @@ class CheckoutUrlService extends BkashService
 
       $response = json_decode($res->getBody()->getContents(), true);
 
+
       if($response['statusCode']!='0000')
       { throw new BkashException(json_encode($response));
 
     }
 
-      //$this->storeLog('grant_token', $url, $headers, $body, $response);
+    $this->storeLog('grant_token', $url, $headers, $body, $response);
 
       return $response;
     } catch (Exception $e) {
@@ -73,8 +74,8 @@ class CheckoutUrlService extends BkashService
     try {
       $res = $this->httpClient()->post($this->credential->getURL('/checkout/token/refresh'), [
         'json' => [
-          'app_key' => $this->credential->appKey,
-          'app_secret' => $this->credential->appSecret,
+          'App_key' => $this->credential->appKey,
+          'App_secret' => $this->credential->appSecret,
           'refresh_token' => $refreshToken,
         ],
         'headers' => $this->credential->getAuthHeaders(),
@@ -269,4 +270,15 @@ class CheckoutUrlService extends BkashService
       throw $e;
     }
   }
+
+  public function Failed($message){
+
+    session()->put('payment_Fail_message', $message);
+    return redirect()->route('bkash.payment.fail');
+}
+  public function Success($txrID){
+
+    session()->put('payment_confirm_message',$txrID);
+    return redirect()->route('bkash.payment.success');
+}
 }

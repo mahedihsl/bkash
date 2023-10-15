@@ -4,7 +4,7 @@ namespace Mahedi250\Bkash;
 
 use Illuminate\Support\ServiceProvider;
 use Mahedi250\Bkash\Products\CheckoutUrl;
-use Mahedi250\Bkash\app\Exceptions\BkashExceptionHandler;
+use Mahedi250\Bkash\App\Exceptions\BkashExceptionHandler;
 class bkashServiceProvider extends ServiceProvider
 {
     /**

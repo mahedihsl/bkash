@@ -1,6 +1,6 @@
 <?php
 
-namespace Mahedi250\Bkash\app\Exceptions;
+namespace Mahedi250\Bkash\App\Exceptions;
 
 use Exception;
 

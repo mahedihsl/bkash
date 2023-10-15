@@ -60,6 +60,18 @@ class CheckoutUrl
         return $this->checkoutUrl->voidPayment($paymentID);
 
     }
+    public function Failed($message)
+    {
+
+        return $this->checkoutUrl->Failed($message);
+
+    }
+    public function Success($txrID)
+    {
+
+        return $this->checkoutUrl->Success($txrID);
+
+    }
 
 
 }

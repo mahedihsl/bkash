@@ -12,7 +12,8 @@
 	"license": "MIT",
 	"autoload": {
 		"psr-4": {
-			"Mahedi250\\Bkash\\": "src/"
+			"Mahedi250\\Bkash\\": "package/Bkash/src/",
+			"Mahedi250\\Bkash\\App\\": "package/Bkash/src/app/"
 		}
 	},
 	"authors": [
