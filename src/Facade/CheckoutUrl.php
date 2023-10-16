@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\Facade;
 
 
 /**
- * @method static create($amount, $invoice)
- * @method static verify($paymentRefId)
+ * @method static Create($amount,['payerReference'=>'01877722345','merchantInvoiceNumber'=>'inv.123'])
+ * @method static Execute($paymentID)
  */
 class CheckoutUrl extends Facade
 {
