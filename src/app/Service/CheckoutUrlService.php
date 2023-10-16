@@ -162,10 +162,7 @@ class CheckoutUrlService extends BkashService
 
       $response = json_decode($res->getBody()->getContents(), true);
 
-      if($response['statusCode']!='0000')
-      {
-        throw new BkashException(json_encode($response));
-      }
+
 
       $this->storeLog('Execute Payment', $url, $headers, $body, $response);
 
