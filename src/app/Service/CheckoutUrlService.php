@@ -4,10 +4,13 @@ namespace Mahedi250\Bkash\App\Service;
 
 use Mahedi250\Bkash\App\Util\BkashCredential;
 use Mahedi250\Bkash\App\Service\BkashService;
+use Mahedi250\Bkash\App\Service\BkashAuthService;
+
 use Exception;
 use Illuminate\Support\Str;
 use Mahedi250\Bkash\App\Exceptions\BkashException;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 
 class CheckoutUrlService extends BkashService
 {
@@ -18,6 +21,14 @@ class CheckoutUrlService extends BkashService
 
     parent::__construct('tokenized');
     $this->credential = new BkashCredential(config('bkash'));
+
+     // Use the singleton instance
+     $bkashAuthService = new BkashAuthService();
+     $this->token = $bkashAuthService->getToken();
+
+    Log::info("bkashAuthService---session_data =>" . json_encode(Session::all()));
+
+
 
     $this->token= $this->grantToken()['id_token'];
 
@@ -102,7 +113,6 @@ class CheckoutUrlService extends BkashService
     }
 
     try {
-      $token= $this->grantToken();
 
       $url = $this->credential->getURL('/checkout/create');
       $headers = $this->credential->getAccessHeaders($this->token);
@@ -126,6 +136,11 @@ class CheckoutUrlService extends BkashService
 
 
       $response = json_decode($res->getBody()->getContents(), true);
+
+      if($response['statusCode']!='0000')
+      {
+        throw new BkashException(json_encode($response));
+      }
 
 
       $this->storeLog('create_payment', $url, $headers, $body, $response);
@@ -151,6 +166,11 @@ class CheckoutUrlService extends BkashService
       ]);
 
       $response = json_decode($res->getBody()->getContents(), true);
+
+      if($response['statusCode']!='0000')
+      {
+        throw new BkashException(json_encode($response));
+      }
 
       $this->storeLog('Execute Payment', $url, $headers, $body, $response);
 

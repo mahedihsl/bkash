@@ -8,7 +8,9 @@ Route::group(['middleware' => ['web']], function () {
 
 
     Route::get("/bkash",function(){
+        // session(['test_key' => 'test_value']);
         $response = CheckoutUrl::Create(100);
+
             return redirect($response['bkashURL']);
 
     });

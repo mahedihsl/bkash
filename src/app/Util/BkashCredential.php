@@ -6,6 +6,7 @@ class BkashCredential
 {
   public $callbackurl;
   public $baseUrl;
+  public $sandbox;
   public $appKey;
   public $appSecret;
   public $username;
@@ -22,6 +23,7 @@ class BkashCredential
     $this->username = $arr['BKASH_CHECKOUT_URL_USER_NAME'];
     $this->password = $arr['BKASH_CHECKOUT_URL_PASSWORD'];
     $this->callbackurl=$arr['callback_url'];
+    $this->sandbox= $arr['BKASH_SANDBOX'];
 
   }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Mahedi250\Bkash\app\Service;
+namespace Mahedi250\Bkash\App\Service;
 
 use Illuminate\Support\Facades\Redis;
 

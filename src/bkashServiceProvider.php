@@ -5,6 +5,7 @@ namespace Mahedi250\Bkash;
 use Illuminate\Support\ServiceProvider;
 use Mahedi250\Bkash\Products\CheckoutUrl;
 use Mahedi250\Bkash\App\Exceptions\BkashExceptionHandler;
+use Mahedi250\Bkash\App\Service\BkashAuthService;
 class bkashServiceProvider extends ServiceProvider
 {
     /**
@@ -22,6 +23,10 @@ class bkashServiceProvider extends ServiceProvider
         });
 
         $this->loadViewsFrom(__DIR__ . '/Views', 'bkash');
+
+        $this->app->singleton(BkashAuthService::class, function ($app) {
+            return new BkashAuthService();
+        });
 
 
 
