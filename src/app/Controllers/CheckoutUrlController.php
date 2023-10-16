@@ -10,25 +10,22 @@ class CheckoutUrlController extends Controller
 
 
 
-    public function Callback(Request $request)
+    public function callback(Request $request)
     {
-        if($request->all()['status']=='success'){
-            $response=CheckoutUrl::Execute($request['paymentID']);
-            if($response['statusCode']!='0000')
-            {
-                return CheckoutUrl::Failed($response['statusMessage']);
+        $status = $request->input('status');
+        $paymentId = $request->input('paymentID');
+
+        if ($status === 'success') {
+            $response = CheckoutUrl::execute($paymentId);
+
+            if ($response['statusCode'] !== '0000') {
+                return CheckoutUrl::failed($response['statusMessage']);
             }
 
-             return CheckoutUrl::Success($response['trxID']);
-
+            return CheckoutUrl::success($response['trxID']);
+        } else {
+            return CheckoutUrl::failed($status);
         }
-        else
-        {
-
-            return CheckoutUrl::Failed($request['status']);
-
-        }
-
     }
 
    public function Failed(){
