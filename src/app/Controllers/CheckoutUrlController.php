@@ -16,15 +16,15 @@ class CheckoutUrlController extends Controller
         $paymentId = $request->input('paymentID');
 
         if ($status === 'success') {
-            $response = CheckoutUrl::execute($paymentId);
+            $response = CheckoutUrl::Execute($paymentId);
 
             if ($response['statusCode'] !== '0000') {
-                return CheckoutUrl::failed($response['statusMessage']);
+                return CheckoutUrl::Failed($response['statusMessage']);
             }
 
-            return CheckoutUrl::success($response['trxID']);
+            return CheckoutUrl::Success($response['trxID']);
         } else {
-            return CheckoutUrl::failed($status);
+            return CheckoutUrl::Failed($status);
         }
     }
 
