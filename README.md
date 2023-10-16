@@ -22,34 +22,35 @@ php artisan vendor:publish --provider="Mahedi250\Bkash\bkashServiceProvider"
  BKASH_CHECKOUT_URL_PASSWORD = ''
  BKASH_CHECKOUT_URL_APP_KEY = ''
  BKASH_CHECKOUT_URL_APP_SECRET = ''
- BKASH_CALLBACK_URL='Your defined Callback URl'
+ BKASH_CALLBACK_URL='Your defined Callback URl //defualt Callback url => http://127.0.0.1:8000/bkash/callback'
 
 ```
 
-### Generate the controller
+### Generate the Controller
 
 ```bash
 php artisan make:controller Payment/BkashPaymentController
 
 ```
 
-## CHECKOUT (URL BASED)
+# [CHECKOUT (URL BASED)](https://developer.bka.sh/docs/checkout-url-process-overview)
 
 ### 1. Create Payment
 
 ```
 <?php
 
-namespace App\Payment;
+namespace App\Http\Controllers\Payment;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Mahedi250\Bkash\Facade\CheckoutUrl;
 
 class BkashPaymentController extends Controller
 {
     public function pay(Request $request)
     {
-        $amount = $request->input('amount');
+        $amount = 100;
         $response = CheckoutUrl::Create($amount);
         return redirect($response['bkashURL']);
     }
@@ -80,6 +81,7 @@ public function callback(Request $request)
             if ($response['statusCode'] !== '0000') {
                 return CheckoutUrl::Failed($response['statusMessage']);
             }
+                //store Payment details in database
 
             return CheckoutUrl::Success($response['trxID']);
         } else {
@@ -93,8 +95,18 @@ public function callback(Request $request)
 
 ```
 Route::group(['middleware' => ['web']], function () {
-    Route::post("bkash/pay",[BkashPaymentController::class,'pay']);
+    Route::post("bkash/pay",[BkashPaymentController::class,'pay'])->name('bkash.pay');
     Route::get("bkash/callback",[BkashPaymentController::class,'Callback']);
 });
+
+```
+
+### 4. Use route('bkash.pay') in blade
+
+```
+<form action="{{ route('bkash.pay') }}" method="POST">
+        @csrf
+        <button type="submit">Pay with bkash</button>
+    </form>
 
 ```
