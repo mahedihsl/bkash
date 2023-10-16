@@ -96,7 +96,7 @@ class CheckoutUrlService extends BkashService
   public function createPayment($amount,$options)
   {
     $defaults = [
-        'payerReference' => ' ',
+        'payerReference' => '11',
         'intent' => 'sale',
         'merchantInvoiceNumber' => str::random(20)
     ];
