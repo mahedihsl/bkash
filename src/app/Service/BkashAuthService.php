@@ -7,6 +7,7 @@ use Mahedi250\Bkash\App\Exceptions\BkashException;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
+use DateTime;
 
 
 class BkashAuthService extends BkashService
@@ -26,11 +27,9 @@ class BkashAuthService extends BkashService
 
 
 
-
     public function getToken()
-{
+    {
     $token = Session::get('bkash_token');
-
 
 
     Log::info("bkashAuthService---first"."=>".json_encode($token));
@@ -44,7 +43,7 @@ class BkashAuthService extends BkashService
 
         Session::put('bkash_token', $tokenArray);
 
-        Log::info("bkashAuthService---from new session"."=>".json_encode($tokenArray));
+        Log::info("bkashAuthService---> previously no token found");
 
         return $tokenArray['id_token'];
     } else {
@@ -55,9 +54,23 @@ class BkashAuthService extends BkashService
                 'store_time' => now(),
             ];
             Session::put('bkash_token', $tokenArray);
+            Log::info("bkashAuthService---> env cahnged new token generated");
             return $tokenArray['id_token'];
-        } else {
-            Log::info("bkashAuthService---from session"."=>".$token['id_token']);
+        }
+        else if ($this->hasExceededTimeLimit($token['store_time'])) {
+            $tokenArray = [
+                'id_token' => $this->grantToken()['id_token'],
+                'sandbox' => $this->credential->sandbox,
+                'store_time' => now(),
+            ];
+            Session::put('bkash_token', $tokenArray);
+            Log::info("bkashAuthService---> Token time excced new token generated");
+            return $tokenArray['id_token'];
+        }
+
+
+        else {
+            Log::info("bkashAuthService---Token from existing session");
             return $token['id_token'];
         }
     }
@@ -114,6 +127,20 @@ class BkashAuthService extends BkashService
       }
     }
 
+   private function hasExceededTimeLimit($storeTime, $minutesLimit = 50) {
+        // Parse the stored time as a DateTime object
+        $storedTime = new DateTime($storeTime);
+
+        // Get the current time as a DateTime object
+        $currentTime = new DateTime();
+
+        // Calculate the difference in minutes
+        $interval = $storedTime->diff($currentTime);
+        $minutesDifference = $interval->days * 24 * 60 + $interval->h * 60 + $interval->i;
+
+        // Check if the difference exceeds the specified minutes limit
+        return $minutesDifference > $minutesLimit;
+    }
 
 
 

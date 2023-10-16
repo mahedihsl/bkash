@@ -16,6 +16,7 @@ class CheckoutUrlService extends BkashService
 {
   private $credential;
   private $token;
+  private $bkashAuthService ;
   public function __construct()
   {
 
@@ -23,14 +24,8 @@ class CheckoutUrlService extends BkashService
     $this->credential = new BkashCredential(config('bkash'));
 
      // Use the singleton instance
-     $bkashAuthService = new BkashAuthService();
-     $this->token = $bkashAuthService->getToken();
+     $this->bkashAuthService = new BkashAuthService();
 
-    Log::info("bkashAuthService---session_data =>" . json_encode(Session::all()));
-
-
-
-    $this->token= $this->grantToken()['id_token'];
 
   }
 
@@ -115,7 +110,7 @@ class CheckoutUrlService extends BkashService
     try {
 
       $url = $this->credential->getURL('/checkout/create');
-      $headers = $this->credential->getAccessHeaders($this->token);
+      $headers = $this->credential->getAccessHeaders($this->bkashAuthService->getToken());
 
       $body = [
         "mode"=> "0011",
@@ -156,7 +151,7 @@ class CheckoutUrlService extends BkashService
     try {
 
       $url = $this->credential->getURL('/checkout/execute/');
-      $headers = $this->credential->getAccessHeaders($this->token);
+      $headers = $this->credential->getAccessHeaders($this->bkashAuthService->getToken());
       $body = [
         'paymentID'=> $paymentID
       ];
@@ -188,7 +183,7 @@ class CheckoutUrlService extends BkashService
     try {
 
       $url = $this->credential->getURL('/checkout/payment/status');
-      $headers = $this->credential->getAccessHeaders($this->token);
+      $headers = $this->credential->getAccessHeaders($this->bkashAuthService->getToken());
       $body = ['paymentID'=>$paymentID];
       $res = $this->httpClient()->post($url, [
         'json'=> $body,
@@ -210,7 +205,7 @@ class CheckoutUrlService extends BkashService
     try {
 
       $url = $this->credential->getURL('/checkout/general/searchTransaction');
-      $headers = $this->credential->getAccessHeaders($this->token);
+      $headers = $this->credential->getAccessHeaders($this->bkashAuthService->getToken());
       $body = ['trxID'=>$trxID];
       $res = $this->httpClient()->post($url, [
         'json'=> $body,
@@ -238,7 +233,7 @@ class CheckoutUrlService extends BkashService
           'sku' => 'no SKU',
           'reason' => 'Product quality issue'
         ],
-        'headers' => $this->credential->getAccessHeaders($this->token),
+        'headers' => $this->credential->getAccessHeaders($this->bkashAuthService->getToken()),
       ]);
 
       return json_decode($res->getBody()->getContents(), true);
@@ -253,7 +248,7 @@ class CheckoutUrlService extends BkashService
     try {
 
       $url = $this->credential->getURL('/checkout/payment/confirm/capture');
-      $headers = $this->credential->getAccessHeaders($this->token);
+      $headers = $this->credential->getAccessHeaders($this->bkashAuthService->getToken());
       $body = [
         'paymentID'=> $paymentID
       ];
@@ -274,7 +269,7 @@ class CheckoutUrlService extends BkashService
     try {
 
       $url = $this->credential->getURL('/checkout/payment/confirm/void');
-      $headers = $this->credential->getAccessHeaders($this->token);
+      $headers = $this->credential->getAccessHeaders($this->bkashAuthService->getToken());
       $body = [
         'paymentID'=> $paymentID
       ];
