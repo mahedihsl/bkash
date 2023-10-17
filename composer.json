@@ -18,8 +18,7 @@
 	},
 	"authors": [
 		{
-			"name": "Mahedi hassan",
-			"email": "maruf250@gmail.com"
+			"name": "Mahedi hassan"
 		}
 	],
 	"minimum-stability": "dev",
