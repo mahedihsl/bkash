@@ -5,12 +5,10 @@ namespace Mahedi250\Bkash\App\Service;
 use Mahedi250\Bkash\App\Util\BkashCredential;
 use Mahedi250\Bkash\App\Service\BkashService;
 use Mahedi250\Bkash\App\Service\BkashAuthService;
-
-use Exception;
 use Illuminate\Support\Str;
 use Mahedi250\Bkash\App\Exceptions\BkashException;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Session;
+use Exception;
 
 class CheckoutUrlService extends BkashService
 {
@@ -22,10 +20,7 @@ class CheckoutUrlService extends BkashService
 
     parent::__construct('tokenized');
     $this->credential = new BkashCredential(config('bkash'));
-
-     // Use the singleton instance
-     $this->bkashAuthService = new BkashAuthService();
-
+    $this->bkashAuthService = new BkashAuthService();
 
   }
 
