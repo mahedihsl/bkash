@@ -15,28 +15,22 @@ class BkashAuthService extends BkashService
 
 
     private $credential;
-    private static $instance;
     public function __construct()
     {
-
         parent::__construct('tokenized');
         $this->credential = new BkashCredential(config('bkash'));
-
-
     }
-
 
 
     public function getToken()
     {
     $token = Session::get('bkash_token');
-
-
     Log::info("bkashAuthService---first"."=>".json_encode($token));
 
     if (!$token) {
         $tokenArray = [
             'id_token' => $this->grantToken()['id_token'],
+            'app_key'=>$this->credential->appKey,
             'sandbox' => $this->credential->sandbox,
             'store_time' => now(),
         ];
@@ -50,6 +44,7 @@ class BkashAuthService extends BkashService
         if ($token['sandbox'] != $this->credential->sandbox) {
             $tokenArray = [
                 'id_token' => $this->grantToken()['id_token'],
+                'app_key'=>$this->credential->appKey,
                 'sandbox' => $this->credential->sandbox,
                 'store_time' => now(),
             ];
@@ -60,11 +55,23 @@ class BkashAuthService extends BkashService
         else if ($this->hasExceededTimeLimit($token['store_time'])) {
             $tokenArray = [
                 'id_token' => $this->grantToken()['id_token'],
+                'app_key'=>$this->credential->appKey,
                 'sandbox' => $this->credential->sandbox,
                 'store_time' => now(),
             ];
             Session::put('bkash_token', $tokenArray);
             Log::info("bkashAuthService---> Token time excced new token generated");
+            return $tokenArray['id_token'];
+        }
+        else if ($token['app_key']!=$this->credential->appKey && $this->credential->sandbox==true) {
+            $tokenArray = [
+                'id_token' => $this->grantToken()['id_token'],
+                'app_key'=>$this->credential->appKey,
+                'sandbox' => $this->credential->sandbox,
+                'store_time' => now(),
+            ];
+            Session::put('bkash_token', $tokenArray);
+            Log::info("bkashAuthService---> credential Type change new token generated");
             return $tokenArray['id_token'];
         }
 
@@ -97,9 +104,11 @@ class BkashAuthService extends BkashService
 
 
         if($response['statusCode']!='0000')
-        { throw new BkashException(json_encode($response));
+        {
 
-      }
+            throw new BkashException(json_encode($response));
+
+        }
 
      // $this->storeLog('grant_token', $url, $headers, $body, $response);
 
