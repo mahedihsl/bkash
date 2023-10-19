@@ -150,6 +150,7 @@ class CheckoutUrlService extends BkashService
       $body = [
         'paymentID'=> $paymentID
       ];
+
       $res = $this->httpClient()->post($url, [
         'json' => $body,
         'headers' => $headers,
@@ -278,6 +279,28 @@ class CheckoutUrlService extends BkashService
     }
   }
 
+  public function makePayment($paymentID)
+  {
+        $startTimestamp = time();
+        $response = $this->executePayment($paymentID);
+        $endTimestamp = time();
+
+        if ( isset($response) && array_key_exists('statusCode',$response))
+        {
+
+            return $response;
+        }
+
+        if ($endTimestamp - $startTimestamp > 30 && array_key_exists("message",$response))
+        {
+            // If the executePayment took too long, call the query API
+            $queryResponse = $this->queryPayment($paymentID);
+
+            return $queryResponse;
+        }
+
+  }
+
   public function Failed($message){
 
     session()->put('payment_Fail_message', $message);
@@ -286,6 +309,7 @@ class CheckoutUrlService extends BkashService
   public function Success($txrID){
 
     session()->put('payment_confirm_message',$txrID);
+
     return redirect()->route('bkash.payment.success');
 }
 }

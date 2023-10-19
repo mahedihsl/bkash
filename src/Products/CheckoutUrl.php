@@ -30,6 +30,12 @@ class CheckoutUrl
         return $this->checkoutUrl->executePayment($paymentID);
 
     }
+    public function MakePayment($paymentID)
+    {
+
+        return $this->checkoutUrl->makePayment($paymentID);
+
+    }
     public function Query($paymentID)
     {
 
