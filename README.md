@@ -120,7 +120,7 @@ Route::group(['middleware' => ['web']], function () {
 
 ## [AUTH & CAPTURE (URL)](https://developer.bka.sh/docs/auth-capture-process-overview)
 
-### 1. Create Payment
+### Create Payment
 
 ```
         $amount = 200;
@@ -128,13 +128,13 @@ Route::group(['middleware' => ['web']], function () {
         return redirect($response['bkashURL']);
 ```
 
-### 2. [Capture](https://developer.bka.sh/docs/auth-capture-process-overview)
+### [Capture](https://developer.bka.sh/docs/auth-capture-process-overview)
 
 ```
         CheckoutUrl::Capture($paymentID);
 ```
 
-### 3. [Void](https://developer.bka.sh/docs/void)
+### [Void](https://developer.bka.sh/docs/void)
 
 ```
         CheckoutUrl::Void($paymentID);
