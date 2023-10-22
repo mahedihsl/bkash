@@ -33,7 +33,7 @@ php artisan make:controller Payment/BkashPaymentController
 
 ```
 
-# [CHECKOUT (URL BASED)](https://developer.bka.sh/docs/checkout-url-process-overview)
+## [CHECKOUT (URL BASED)](https://developer.bka.sh/docs/checkout-url-process-overview)
 
 ### 1. Create Payment
 
@@ -61,7 +61,7 @@ class BkashPaymentController extends Controller
 #### To Pass Additional Body Parameter
 
 ```
-$response = CheckoutUrl::Create(1000,['payerReference'=>"01877722345",'merchantInvoiceNumber'=>"Inv-12"]);
+$response = CheckoutUrl::Create(1000,['payerReference'=>"01877722345",'merchantInvoiceNumber'=>"Inv_12"]);
 
 return redirect($response['bkashURL']);
 
@@ -70,24 +70,28 @@ return redirect($response['bkashURL']);
 ### 2. ADD callback function
 
 ```
- public function callback(Request $request)
+  public function callback(Request $request)
     {
         $status = $request->input('status');
         $paymentId = $request->input('paymentID');
 
-        if ($status === 'success') {
+        if ($status === 'success')
+        {
             $response = CheckoutUrl::MakePayment($paymentId);
 
-            if ($response['statusCode'] !== '0000') {
-                return CheckoutUrl::Failed($response['statusMessage']);
-                }
-                if (array_key_exists('transactionStatus',$response)&&$response['transactionStatus']=='Completed'){
+            if ($response['statusCode'] !== '0000')
+            {
+            return CheckoutUrl::Failed($response['statusMessage']);
+            }
 
-                return CheckoutUrl::Success($response['trxID']);
+            if (array_key_exists('transactionStatus',$response)&&($response['transactionStatus']=='Completed'||$response['transactionStatus']=='Authorized'))
+            {
 
-                }
-
-        } else {
+                return CheckoutUrl::Success($response['trxID']."({$response['transactionStatus']})");
+            }
+        }
+        else
+        {
             return CheckoutUrl::Failed($status);
         }
     }
@@ -112,4 +116,26 @@ Route::group(['middleware' => ['web']], function () {
         <button type="submit">Pay with bkash</button>
     </form>
 
+```
+
+## [AUTH & CAPTURE (URL)](https://developer.bka.sh/docs/auth-capture-process-overview)
+
+### 1. Create Payment
+
+```
+        $amount = 200;
+        $response = CheckoutUrl::Create($amount,['intent'=>'authorization']);
+        return redirect($response['bkashURL']);
+```
+
+### 2. [Capture](https://developer.bka.sh/docs/auth-capture-process-overview)
+
+```
+        CheckoutUrl::Capture($paymentID);
+```
+
+### 3. [Void](https://developer.bka.sh/docs/void)
+
+```
+        CheckoutUrl::Void($paymentID);
 ```

@@ -15,19 +15,23 @@ class CheckoutUrlController extends Controller
         $status = $request->input('status');
         $paymentId = $request->input('paymentID');
 
-        if ($status === 'success') {
+        if ($status === 'success')
+        {
             $response = CheckoutUrl::MakePayment($paymentId);
 
-            if ($response['statusCode'] !== '0000') {
-                return CheckoutUrl::Failed($response['statusMessage']);
-                }
-                if (array_key_exists('transactionStatus',$response)&&$response['transactionStatus']=='Completed'){
+            if ($response['statusCode'] !== '0000')
+            {
+            return CheckoutUrl::Failed($response['statusMessage']);
+            }
 
-                return CheckoutUrl::Success($response['trxID']);
+            if (array_key_exists('transactionStatus',$response)&&($response['transactionStatus']=='Completed'||$response['transactionStatus']=='Authorized'))
+            {
 
-                }
-
-        } else {
+                return CheckoutUrl::Success($response['trxID']."({$response['transactionStatus']})");
+            }
+        }
+        else
+        {
             return CheckoutUrl::Failed($status);
         }
     }
