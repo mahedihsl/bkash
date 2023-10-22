@@ -281,9 +281,9 @@ class CheckoutUrlService extends BkashService
 
   public function makePayment($paymentID)
   {
-        $startTimestamp = time();
+
         $response = $this->executePayment($paymentID);
-        $endTimestamp = time();
+
 
         if ( isset($response) && array_key_exists('statusCode',$response))
         {
@@ -291,7 +291,7 @@ class CheckoutUrlService extends BkashService
             return $response;
         }
 
-        if ($endTimestamp - $startTimestamp > 30 && array_key_exists("message",$response))
+        if (array_key_exists("message",$response))
         {
             // If the executePayment took too long, call the query API
             $queryResponse = $this->queryPayment($paymentID);
