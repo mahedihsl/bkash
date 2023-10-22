@@ -70,20 +70,23 @@ return redirect($response['bkashURL']);
 ### 2. ADD callback function
 
 ```
-public function callback(Request $request)
+ public function callback(Request $request)
     {
         $status = $request->input('status');
         $paymentId = $request->input('paymentID');
 
         if ($status === 'success') {
-            $response = CheckoutUrl::Execute($paymentId);
+            $response = CheckoutUrl::MakePayment($paymentId);
 
             if ($response['statusCode'] !== '0000') {
                 return CheckoutUrl::Failed($response['statusMessage']);
-            }
-                //store Payment details in database
+                }
+                if (array_key_exists('transactionStatus',$response)&&$response['transactionStatus']=='Completed'){
 
-            return CheckoutUrl::Success($response['trxID']);
+                return CheckoutUrl::Success($response['trxID']);
+
+                }
+
         } else {
             return CheckoutUrl::Failed($status);
         }
