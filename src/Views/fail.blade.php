@@ -27,7 +27,7 @@
         .bird {
             width: 100px;
             height: 100px;
-            background-image: url('https://freelogopng.com/images/all_img/1656234782bkash-app-logo.png'); /* Replace with your bird image */
+            background-image: url('https://freelogopng.com/images/all_img/1656234782bkash-app-logo.png');
             background-size: cover;
             animation: heartbeat 1.5s ease-in-out infinite;
         }
