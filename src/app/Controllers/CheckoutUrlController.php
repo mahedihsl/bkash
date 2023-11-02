@@ -26,13 +26,19 @@ class CheckoutUrlController extends Controller
 
             if (array_key_exists('transactionStatus',$response)&&($response['transactionStatus']=='Completed'||$response['transactionStatus']=='Authorized'))
             {
-
+                 //Database Insert Operation
                 return CheckoutUrl::Success($response['trxID']."({$response['transactionStatus']})");
             }
+            else if($response['transactionStatus']=='Initiated')
+            {
+
+                return CheckoutUrl::Failed("Try Again");
+            }
         }
+
         else
         {
-            return CheckoutUrl::Failed($status);
+          return CheckoutUrl::Failed($status);
         }
     }
 

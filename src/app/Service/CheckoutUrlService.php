@@ -284,8 +284,11 @@ class CheckoutUrlService extends BkashService
 
         $response = $this->executePayment($paymentID);
 
-
-        if ( isset($response) && array_key_exists('statusCode',$response))
+        if(!$response)
+        {
+            return ['statusCode'=>'1111','statusMessage'=>"Unknown error"];
+        }
+        if (array_key_exists('statusCode',$response))
         {
 
             return $response;
@@ -294,9 +297,8 @@ class CheckoutUrlService extends BkashService
         if (array_key_exists("message",$response))
         {
             // If the executePayment took too long, call the query API
-            $queryResponse = $this->queryPayment($paymentID);
-
-            return $queryResponse;
+            sleep(1);
+            return $this->queryPayment($paymentID);
         }
 
   }
