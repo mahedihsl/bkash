@@ -118,6 +118,16 @@ Route::group(['middleware' => ['web']], function () {
 
 ```
 
+### For refund Transaction
+
+```
+ public function refund(Request $request)
+    {
+        return CheckoutUrl::Refund($paymentID,$trxID,$amountToRefund);
+    }
+
+```
+
 ## [AUTH & CAPTURE (URL)](https://developer.bka.sh/docs/auth-capture-process-overview)
 
 ### Create Payment
