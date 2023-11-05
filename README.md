@@ -61,7 +61,7 @@ class BkashPaymentController extends Controller
 #### To Pass Additional Body Parameter
 
 ```
-$response = CheckoutUrl::Create(1000,['payerReference'=>"01877722345",'merchantInvoiceNumber'=>"Inv_12"]);
+$response = CheckoutUrl::Create(1000,['payerReference'=>"01877722345",'merchantInvoiceNumber'=>"Inv_123"]);
 
 return redirect($response->bkashURL);
 
