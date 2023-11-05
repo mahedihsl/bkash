@@ -54,10 +54,10 @@ class CheckoutUrlService extends BkashService
         'headers' => $headers,
       ]);
 
-      $response = json_decode($res->getBody()->getContents(), true);
+      $response = json_decode($res->getBody()->getContents());
 
 
-      if($response['statusCode']!='0000')
+      if($response->statusCode!='0000')
       { throw new BkashException(json_encode($response));
 
     }
@@ -82,7 +82,7 @@ class CheckoutUrlService extends BkashService
         'headers' => $this->credential->getAuthHeaders(),
       ]);
 
-      return json_decode($res->getBody()->getContents(), true);
+      return json_decode($res->getBody()->getContents());
     } catch (Exception $e) {
       throw $e;
     }
@@ -125,9 +125,9 @@ class CheckoutUrlService extends BkashService
 
 
 
-      $response = json_decode($res->getBody()->getContents(), true);
+      $response = json_decode($res->getBody()->getContents());
 
-      if($response['statusCode']!='0000')
+      if($response->statusCode!='0000')
       {
         throw new BkashException(json_encode($response));
       }
@@ -156,7 +156,7 @@ class CheckoutUrlService extends BkashService
         'headers' => $headers,
       ]);
 
-      $response = json_decode($res->getBody()->getContents(), true);
+      $response = json_decode($res->getBody()->getContents());
 
 
 
@@ -183,7 +183,7 @@ class CheckoutUrlService extends BkashService
         'headers' => $headers,
       ]);
 
-      $response = json_decode($res->getBody()->getContents(), true);
+      $response = json_decode($res->getBody()->getContents());
 
       $this->storeLog('query_payment', $url, $headers, $body, $response);
 
@@ -205,7 +205,7 @@ class CheckoutUrlService extends BkashService
         'headers' => $headers,
       ]);
 
-      $response = json_decode($res->getBody()->getContents(), true);
+      $response = json_decode($res->getBody()->getContents());
       $this->storeLog('search_transaction', $url, $headers, $body, $response);
 
       return $response;
@@ -229,7 +229,7 @@ class CheckoutUrlService extends BkashService
         'headers' => $this->credential->getAccessHeaders($this->bkashAuthService->getToken()),
       ]);
 
-      return json_decode($res->getBody()->getContents(), true);
+      return json_decode($res->getBody()->getContents());
     } catch (Exception $e) {
       throw $e;
     }
@@ -250,7 +250,7 @@ class CheckoutUrlService extends BkashService
         'headers' => $headers,
       ]);
 
-      $response = json_decode($res->getBody()->getContents(), true);
+      $response = json_decode($res->getBody()->getContents());
 
       return $response;
     } catch (Exception $e) {
@@ -271,7 +271,7 @@ class CheckoutUrlService extends BkashService
         'headers' => $headers,
       ]);
 
-      $response = json_decode($res->getBody()->getContents(), true);
+      $response = json_decode($res->getBody()->getContents());
 
       return $response;
     } catch (Exception $e) {
@@ -284,17 +284,18 @@ class CheckoutUrlService extends BkashService
 
         $response = $this->executePayment($paymentID);
 
-        if(!$response)
-        {
-            return ['statusCode'=>'1111','statusMessage'=>"Unknown error"];
-        }
-        if (array_key_exists('statusCode',$response))
-        {
 
+
+
+        if (is_object($response) && empty((array) $response)) {
+            $newResponse = json_decode('{"statusCode":"1111", "statusMessage":"Unknown error"}');
+            return $newResponse;
+        }
+        if (isset($response->statusCode)) {
             return $response;
         }
 
-        if (array_key_exists("message",$response))
+        if (isset($response->message))
         {
             // If the executePayment took too long, call the query API
             sleep(1);

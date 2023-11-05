@@ -19,17 +19,17 @@ class CheckoutUrlController extends Controller
         {
             $response = CheckoutUrl::MakePayment($paymentId);
 
-            if ($response['statusCode'] !== '0000')
+            if ($response->statusCode !== '0000')
             {
-            return CheckoutUrl::Failed($response['statusMessage']);
+            return CheckoutUrl::Failed($response->statusMessage);
             }
 
-            if (array_key_exists('transactionStatus',$response)&&($response['transactionStatus']=='Completed'||$response['transactionStatus']=='Authorized'))
+            if (isset($response->transactionStatus)&&($response->transactionStatus=='Completed'||$response->transactionStatus=='Authorized'))
             {
                  //Database Insert Operation
-                return CheckoutUrl::Success($response['trxID']."({$response['transactionStatus']})");
+                return CheckoutUrl::Success($response->trxID."({$response->transactionStatus})");
             }
-            else if($response['transactionStatus']=='Initiated')
+            else if($response->transactionStatus=='Initiated')
             {
 
                 return CheckoutUrl::Failed("Try Again");

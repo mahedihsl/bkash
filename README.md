@@ -52,7 +52,7 @@ class BkashPaymentController extends Controller
     {
         $amount = 100;
         $response = CheckoutUrl::Create($amount);
-        return redirect($response['bkashURL']);
+        return redirect($response->bkashURL);
     }
 }
 
@@ -63,7 +63,7 @@ class BkashPaymentController extends Controller
 ```
 $response = CheckoutUrl::Create(1000,['payerReference'=>"01877722345",'merchantInvoiceNumber'=>"Inv_12"]);
 
-return redirect($response['bkashURL']);
+return redirect($response->bkashURL);
 
 ```
 
@@ -79,20 +79,26 @@ return redirect($response['bkashURL']);
         {
             $response = CheckoutUrl::MakePayment($paymentId);
 
-            if ($response['statusCode'] !== '0000')
+            if ($response->statusCode !== '0000')
             {
-            return CheckoutUrl::Failed($response['statusMessage']);
+            return CheckoutUrl::Failed($response->statusMessage);
             }
 
-            if (array_key_exists('transactionStatus',$response)&&($response['transactionStatus']=='Completed'||$response['transactionStatus']=='Authorized'))
+            if (isset($response->transactionStatus)&&($response->transactionStatus=='Completed'||$response->transactionStatus=='Authorized'))
+            {
+                 //Database Insert Operation
+                return CheckoutUrl::Success($response->trxID."({$response->transactionStatus})");
+            }
+            else if($response->transactionStatus=='Initiated')
             {
 
-                return CheckoutUrl::Success($response['trxID']."({$response['transactionStatus']})");
+                return CheckoutUrl::Failed("Try Again");
             }
         }
+
         else
         {
-            return CheckoutUrl::Failed($status);
+          return CheckoutUrl::Failed($status);
         }
     }
 
@@ -123,7 +129,7 @@ Route::group(['middleware' => ['web']], function () {
 ```
  public function refund(Request $request)
     {
-        return CheckoutUrl::Refund($paymentID,$trxID,$amountToRefund);
+        return CheckoutUrl::Refund(paymentID,$trxID,$amountToRefund);
     }
 
 ```
