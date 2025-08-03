@@ -6,7 +6,7 @@ use Mahedi250\Bkash\App\Util\BkashCredential;
 use Mahedi250\Bkash\App\Exceptions\BkashException;
 use Exception;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Cache;
 use DateTime;
 
 
@@ -24,64 +24,21 @@ class BkashAuthService extends BkashService
 
     public function getToken()
     {
-    $token = Session::get('bkash_token');
-    Log::info("bkashAuthService---first"."=>".json_encode($token));
+        $cacheKey = 'bkash_id_token';
+        $idToken = Cache::get($cacheKey);
 
-    if (!$token) {
-        $tokenArray = [
-            'id_token' => $this->grantToken()['id_token'],
-            'app_key'=>$this->credential->appKey,
-            'sandbox' => $this->credential->sandbox,
-            'store_time' => now(),
-        ];
 
-        Session::put('bkash_token', $tokenArray);
 
-        Log::info("bkashAuthService---> previously no token found");
-
-        return $tokenArray['id_token'];
-    } else {
-        if ($token['sandbox'] != $this->credential->sandbox) {
-            $tokenArray = [
-                'id_token' => $this->grantToken()['id_token'],
-                'app_key'=>$this->credential->appKey,
-                'sandbox' => $this->credential->sandbox,
-                'store_time' => now(),
-            ];
-            Session::put('bkash_token', $tokenArray);
-            Log::info("bkashAuthService---> env cahnged new token generated");
-            return $tokenArray['id_token'];
-        }
-        else if ($this->hasExceededTimeLimit($token['store_time'])) {
-            $tokenArray = [
-                'id_token' => $this->grantToken()['id_token'],
-                'app_key'=>$this->credential->appKey,
-                'sandbox' => $this->credential->sandbox,
-                'store_time' => now(),
-            ];
-            Session::put('bkash_token', $tokenArray);
-            Log::info("bkashAuthService---> Token time excced new token generated");
-            return $tokenArray['id_token'];
-        }
-        else if ($token['app_key']!=$this->credential->appKey && $this->credential->sandbox==true) {
-            $tokenArray = [
-                'id_token' => $this->grantToken()['id_token'],
-                'app_key'=>$this->credential->appKey,
-                'sandbox' => $this->credential->sandbox,
-                'store_time' => now(),
-            ];
-            Session::put('bkash_token', $tokenArray);
-            Log::info("bkashAuthService---> credential Type change new token generated");
-            return $tokenArray['id_token'];
+        if (!$idToken) {
+            $idToken = $this->grantToken()['id_token'];
+            Cache::put($cacheKey, $idToken, 55); // cache for 55 minutes
+            Log::info("bkashAuthService---> new token generated and cached");
+        } else {
+            Log::info("bkashAuthService---Token from existing cache");
         }
 
-
-        else {
-            Log::info("bkashAuthService---Token from existing session");
-            return $token['id_token'];
-        }
+        return $idToken;
     }
-}
 
 
     public function grantToken()
