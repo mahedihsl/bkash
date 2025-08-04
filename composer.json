@@ -1,37 +1,37 @@
 {
-	"name": "mahedi250/bkash",
-	"description": "bkash payment gateway for Laravel v.1",
-	"keywords": [
-		"bkash",
-		"bkash-payment-gateway",
-		"bkash-payment",
-		"laravel-bkash",
-		"laravel-bkash-payment"
-	],
-	"type": "library",
-	"license": "MIT",
-	"autoload": {
-		"psr-4": {
-			"Mahedi250\\Bkash\\": "src/",
-			"Mahedi250\\Bkash\\App\\": "src/app/"
-		}
-	},
-	"authors": [
-		{
-			"name": "Mahedi hassan",
-			"email": "bmaruf250@gmail.com"
-		}
-	],
-	"minimum-stability": "dev",
-	"require": {
-		"php": "^7.4|^8.0|^8.1|^8.2",
-		"illuminate/support": "~6|~7|~8|~9|^10.0|^11.0"
-	},
-	"extra": {
-		"laravel": {
-			"providers": [
-				"Mahedi250\\Bkash\\bkashServiceProvider"
-			]
-		}
-	}
+  "name": "mahedi250/bkash",
+  "description": "bkash payment gateway for Laravel v.1",
+  "keywords": [
+    "bkash",
+    "bkash-payment-gateway",
+    "bkash-payment",
+    "laravel-bkash",
+    "laravel-bkash-payment"
+  ],
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Mahedi250\\Bkash\\": "src/",
+      "Mahedi250\\Bkash\\App\\": "src/app/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Mahedi hassan",
+      "email": "bmaruf250@gmail.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "php": "^7.4|^8.0|^8.1|^8.2",
+    "illuminate/support": "~6|~7|~8|~9|^10.0|^11.0|^12.0"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Mahedi250\\Bkash\\bkashServiceProvider"
+      ]
+    }
+  }
 }
